@@ -4,7 +4,7 @@ Complete workflow for automated unit test generation using [crewAI Flows](https:
 
 ## Flow Diagram
 
-![Unit Test Generator Flow](https://github.com/ramandeep11/Generative-AI-Applications/blob/main/unit_tests_generator/Screenshot%202026-01-05%20at%209.28.01%20PM.png)
+![Unit Test Generator Flow]](https://github.com/ramandeep11/Generative-AI-Applications/blob/main/unit_tests_generator/Screenshot%202026-01-05%20at%209.28.01%E2%80%AFPM.png)
 
 ```
 Start → Git Clone → Generate/Build/Validate → Checkout & Commit → End
