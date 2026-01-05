@@ -1,0 +1,23 @@
+[project]
+name = "unit_tests_generator_with_feedback_loop"
+version = "0.1.0"
+description = "unit_tests_generator_with_feedback_loop using crewAI"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+requires-python = ">=3.10,<3.14"
+dependencies = [
+    "crewai[tools]==1.7.2",
+    "GitPython>=3.1.0"
+]
+
+[project.scripts]
+kickoff = "unit_tests_generator_with_feedback_loop.main:kickoff"
+run_crew = "unit_tests_generator_with_feedback_loop.main:kickoff"
+plot = "unit_tests_generator_with_feedback_loop.main:plot"
+run_with_trigger = "unit_tests_generator_with_feedback_loop.main:run_with_trigger"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.crewai]
+type = "flow"

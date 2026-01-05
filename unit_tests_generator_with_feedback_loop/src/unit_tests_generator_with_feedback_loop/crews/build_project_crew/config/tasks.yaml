@@ -1,0 +1,13 @@
+build_project_task:
+  description: >
+    Build the project using {build_tool} at the location: {clone_path}
+    Use the project build tool with build_tool="{build_tool}" and path="{clone_path}".
+    Execute the build command and capture all output including compilation errors, test failures, and any warnings.
+    Analyze the build result and provide detailed feedback that can be used to fix any issues.
+  expected_output: >
+    A structured report containing:
+    1. Build success status (true/false)
+    2. Complete build output or error messages
+    3. Specific compilation errors if any
+    4. Recommendations for fixing build failures
+  agent: build_project_agent
