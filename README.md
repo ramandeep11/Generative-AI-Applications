@@ -1,30 +1,53 @@
 # Generative AI Projects
 
-A collection of three independent AI-powered automation and information retrieval projects leveraging LLMs, RAG, and multi-agent systems.
+A collection of AI-powered automation and information retrieval projects leveraging LLMs, RAG, and multi-agent systems.
 
 ## Projects
 
-### 1. [Unit-test-generator](./Unit-test-generator/)
+### 1. [unit_tests_generator](./unit_tests_generator/)
 
-**Type**: Multi-Agent Automation System
+**Type**: Multi-Agent Flow-Based Automation
 
-**Description**: An intelligent unit test generation system built with CrewAI that automatically generates, writes, and validates unit tests for Java projects. The system uses multiple specialized AI agents organized into crews that work together to clone repositories, generate comprehensive unit tests, validate them through builds, and commit results to a new branch.
+**Description**: Complete workflow automation for unit test generation using CrewAI Flows. Clones repositories, generates unit tests, and commits to a new branch. Features a flow-based architecture.
+
+![Flow Diagram](https://github.com/ramandeep11/Generative-AI-Applications/blob/main/unit_tests_generator/Screenshot%202026-01-05%20at%209.28.01%E2%80%AFPM.png)
 
 **Key Features**:
-- Automated unit test generation for Java service classes
-- Iterative refinement based on build feedback (up to 3 attempts)
-- CrewAI Flow orchestration with multiple specialized crews
-- Git integration for cloning, branching, and committing
-- Maven/Gradle build validation
-- Custom tools for file operations and project building
+- Complete end-to-end workflow from clone to commit
+- Three specialized crews: GitClone, GenerateUnitTest, GitCheckoutAndCommit
+- Hierarchical process with manager agent for test generation
+- Custom tools: GitCloneTool, FileWriterTool, ProjectBuildTool
+- Build validation
 
-**Tech Stack**: CrewAI, OpenAI GPT-4.1-mini, Python, Git, Maven/Gradle
+**Tech Stack**: CrewAI Flows 1.7.2, OpenAI GPT-4o-mini, Python 3.10+, GitPython
 
-**[→ View Full Documentation](./Unit-test-generator/README.md)**
+**[→ View Full Documentation](./unit_tests_generator/README.md)**
 
 ---
 
-### 2. [RAG](./RAG/)
+### 2. [unit_tests_generator_with_feedback_loop](./unit_tests_generator_with_feedback_loop/)
+
+**Type**: Iterative AI System with Feedback Loop
+
+**Description**: AI-powered unit test generator with iterative feedback loop to refine tests until they compile successfully. Starts from pre-cloned repositories and focuses on the generate-build-refine cycle with separate crews for each step.
+
+![Flow Diagram](https://github.com/ramandeep11/Generative-AI-Applications/blob/main/unit_tests_generator_with_feedback_loop/Screenshot%202026-01-05%20at%209.26.58%E2%80%AFPM.png)
+
+**Key Features**:
+- Dedicated feedback loop architecture (no git clone step)
+- Separate BuildProjectCrew for validation
+- Router-based retry logic with build feedback
+- Maximum 3 retry attempts with error analysis
+- Pydantic output models for structured results
+- Sequential process for predictable flow
+
+**Tech Stack**: CrewAI Flows 1.7.2, OpenAI GPT-4o-mini, Python 3.10+, GitPython
+
+**[→ View Full Documentation](./unit_tests_generator_with_feedback_loop/README.md)**
+
+---
+
+### 3. [RAG](./RAG/)
 
 **Type**: Retrieval-Augmented Generation System
 
@@ -45,7 +68,7 @@ A collection of three independent AI-powered automation and information retrieva
 
 ---
 
-### 3. [LLM_with_Web](./LLM_with_Web/)
+### 4. [LLM_with_Web](./LLM_with_Web/)
 
 **Type**: LLM-Powered Web Search & Analysis
 
@@ -86,7 +109,7 @@ ollama pull deepseek-r1         # For LLM_with_Web project
 
 ### Environment Setup
 ```bash
-# For Unit-test-generator
+# For all unit test generator projects
 export OPENAI_API_KEY="your-api-key"
 
 # For RAG (install Tesseract)
@@ -98,11 +121,18 @@ sudo apt-get install tesseract-ocr  # Ubuntu/Debian
 
 ## Quick Start
 
-### Unit-test-generator
+### unit_tests_generator
 ```bash
-cd Unit-test-generator
-pip install -e .
-kickoff
+cd unit_tests_generator
+crewai install
+crewai flow kickoff
+```
+
+### unit_tests_generator_with_feedback_loop
+```bash
+cd unit_tests_generator_with_feedback_loop
+crewai install
+crewai flow kickoff
 ```
 
 ### RAG
@@ -124,23 +154,34 @@ python ScrapeUI.py
 
 ## Project Comparison
 
-| Feature | Unit-test-generator | RAG | LLM_with_Web |
-|---------|-------------------|-----|--------------|
-| **Primary Use** | Test automation | Document Q&A | Web research |
-| **LLM Provider** | OpenAI API | Ollama (Local) | Ollama (Local) |
-| **Framework** | CrewAI | Flask + LangChain | LangChain |
-| **UI** | CLI | Gradio | Gradio |
-| **Agents** | Multi-agent (4 crews) | Single pipeline | Single agent |
-| **Data Source** | Git repositories | PDFs, Webpages | Web search |
-| **Output** | Generated code | Answers + sources | Campaign summaries |
+| Feature | unit_tests_generator | unit_tests_generator_with_feedback_loop | RAG | LLM_with_Web |
+|---------|---------------------|----------------------------------------|-----|--------------|
+| **Primary Use** | Complete test workflow | Test refinement loop | Document Q&A | Web research |
+| **LLM Provider** | OpenAI API | OpenAI API | Ollama (Local) | Ollama (Local) |
+| **Framework** | CrewAI Flows | CrewAI Flows | Flask + LangChain | LangChain |
+| **UI** | CLI | CLI | Gradio | Gradio |
+| **Crews** | 3 crews | 3 crews | Single pipeline | Single agent |
+| **Process** | Hierarchical + Sequential | Sequential | Pipeline | Single step |
+| **Git Operations** | Clone + Commit | Commit only | None | None |
+| **Data Source** | Git repositories | Pre-cloned repos | PDFs, Webpages | Web search |
+| **Output** | Generated + committed tests | Generated + committed tests | Answers + sources | Campaign summaries |
+| **Retry Logic** | Router-based (3 max) | Router-based (3 max) | None | None |
 
 ---
 
 ## Architecture Patterns
 
-### Unit-test-generator: Multi-Agent Flow
+### unit_tests_generator: Complete Workflow
 ```
-Start → GitClone → GenerateTest (iterative) → GitCommit → End
+Start → Git Clone → Generate/Build/Validate → Checkout & Commit → End
+```
+
+### unit_tests_generator_with_feedback_loop: Feedback Loop
+```
+Start → Generate → Build → Checkout & Commit → End
+            ↑         ↓
+            └─(retry)─┘
+        (with feedback, max 3 times)
 ```
 
 ### RAG: Pipeline Pattern
